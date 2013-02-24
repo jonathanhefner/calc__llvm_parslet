@@ -1,9 +1,15 @@
 require 'parslet'
 
 
-class IntLit < Struct.new(:val)
+class IntLiteral < Struct.new(:val)
   def eval
     val.to_i
+  end
+end
+
+class FloatLiteral < Struct.new(:val)
+  def eval
+    val.to_f
   end
 end
 
@@ -15,8 +21,12 @@ end
 
 
 class CalcInterpreter < Parslet::Transform
-  rule(int: simple(:int)) {
-    IntLit.new(int)
+  rule(int: simple(:val)) {
+    IntLiteral.new(val)
+  }
+  
+  rule(float: simple(:val)) {
+    FloatLiteral.new(val)
   }
   
   rule(left: simple(:left), op: '+', right: simple(:right)) {

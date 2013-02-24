@@ -9,15 +9,19 @@ input = [
   '1336 + 1',
   '+1 + +1',
   '+1++1',
-  '-1 + 1'
+  '-1 + 1',
+  '1.1 + 2.2',
+  '0.5 + -0.4',
+  '.9 + .1'
 ]
   
 input.each do |i|
-  ast = parser.parse(i)
-  result = interp.apply(ast).eval
-
   puts i
-  puts "TREE #{ast}"
-  puts "EVAL #{result}"
+  ast = parser.parse(i)
+  puts "    #{ast}"
+  ast = interp.apply(ast)
+  puts "    #{ast}"
+  result = ast.eval
+  puts "    #{result}"
   puts ''
 end

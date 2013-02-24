@@ -7,12 +7,16 @@ class CalcParser < Parslet::Parser
   rule(:sign) { match('[+-]') }
   rule(:sign?) { sign.maybe }
   rule(:digit) { match('[0-9]') }
+  rule(:digits) { digit.repeat(1) }
+  rule(:digits?) { digit.repeat(0) }
 
-  rule(:integer) { (sign? >> digit.repeat(1)).as(:int) }
+  rule(:integer) { (sign? >> digits).as(:int) }
+  rule(:floating_point) { (sign? >> digits? >> match('[.]') >> digits).as(:float) }
+  rule(:number) { floating_point | integer }
   rule(:operator) { match('[+]') }
   
-  rule(:sum) { integer.as(:left) >> space? >> operator.as(:op) >> space? >> expression.as(:right) }
+  rule(:sum) { number.as(:left) >> space? >> operator.as(:op) >> space? >> expression.as(:right) }
   
-  rule(:expression) { sum | integer }
+  rule(:expression) { sum | number }
   root(:expression)
 end
