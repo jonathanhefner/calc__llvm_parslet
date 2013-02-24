@@ -10,13 +10,15 @@ class CalcParser < Parslet::Parser
   rule(:digits) { digit.repeat(1) }
   rule(:digits?) { digit.repeat(0) }
 
-  rule(:integer) { (sign? >> digits).as(:int) }
-  rule(:floating_point) { (sign? >> digits? >> match('[.]') >> digits).as(:float) }
-  rule(:number) { floating_point | integer }
-  rule(:operator) { match('[+]') }
+  rule(:int) { (sign? >> digits).as(:int) >> space? }
+  rule(:float) { (sign? >> digits? >> match('[.]') >> digits).as(:float) >> space?}
+  rule(:num) { float | int }
+  rule(:mult_op) { match('[*/]').as(:op) >> space? }
+  rule(:add_op) { match('[+-]').as(:op) >> space? }
   
-  rule(:sum) { number.as(:left) >> space? >> operator.as(:op) >> space? >> expression.as(:right) }
+  # parslet implements PEG, therefore no left-recursion
+  rule(:p1) { (num.as(:left) >> (mult_op >> p1.as(:right)).repeat(1).as(:rights)) | num }
+  rule(:p0) { (p1.as(:left) >> (add_op >> p1.as(:right)).repeat(1).as(:rights)) | p1 }
   
-  rule(:expression) { sum | number }
-  root(:expression)
+  root(:p0)
 end

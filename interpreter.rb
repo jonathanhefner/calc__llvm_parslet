@@ -13,11 +13,27 @@ class FloatLiteral < Struct.new(:val)
   end
 end
 
-class Addition < Struct.new(:left, :right)
-  def eval
-    left.eval + right.eval
+class OpRight < Struct.new(:op, :right)
+  def eval(left_val)
+    case op
+      when '+'
+        left_val + right.eval
+      when '-'
+        left_val - right.eval
+      when '*'
+        left_val * right.eval
+      when '/'
+        left_val / right.eval
+    end
   end
 end
+
+class OpSequence < Struct.new(:left, :rights)
+  def eval
+    rights.reduce(left.eval){|l, r| r.eval(l) }
+  end
+end
+
 
 
 class CalcInterpreter < Parslet::Transform
@@ -29,7 +45,11 @@ class CalcInterpreter < Parslet::Transform
     FloatLiteral.new(val)
   }
   
-  rule(left: simple(:left), op: '+', right: simple(:right)) {
-    Addition.new(left, right)
+  rule(op: simple(:op), right: subtree(:right)) {
+    OpRight.new(op, right)
+  }
+  
+  rule(left: subtree(:left), rights: sequence(:rights)) {
+    OpSequence.new(left, rights)
   }
 end
