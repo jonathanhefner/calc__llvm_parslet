@@ -27,10 +27,32 @@ class CalcParser < Parslet::Parser
 end
 
 
-class IntLiteral < Struct.new(:val); end
-class FloatLiteral < Struct.new(:val); end
-class OpRight < Struct.new(:op, :right); end
-class OpSequence < Struct.new(:left, :rights); end
+class IntLiteral < Struct.new(:val)
+  def float?
+    false
+  end
+end
+
+
+class FloatLiteral < Struct.new(:val)
+  def float?
+    true
+  end
+end
+
+
+class OpRight < Struct.new(:op, :right)
+  def float?
+    right.float?
+  end
+end
+
+
+class OpSequence < Struct.new(:left, :rights)
+  def float?
+    left.float? || rights.any?{|r| r.float? }
+  end
+end
 
 
 class CalcTransform < Parslet::Transform
