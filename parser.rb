@@ -13,11 +13,14 @@ class CalcParser < Parslet::Parser
   rule(:int) { (sign? >> digits).as(:int) >> space? }
   rule(:float) { (sign? >> digits? >> match('[.]') >> digits).as(:float) >> space?}
   rule(:num) { float | int }
+  rule(:lparen) { match('[(]') >> space? }
+  rule(:rparen) { match('[)]') >> space? }
   rule(:mult_op) { match('[*/]').as(:op) >> space? }
   rule(:add_op) { match('[+-]').as(:op) >> space? }
   
   # parslet implements PEG, therefore no left-recursion
-  rule(:p1) { (num.as(:left) >> (mult_op >> p1.as(:right)).repeat(1).as(:rights)) | num }
+  rule(:p2) { (lparen >> p0 >> rparen) | num }
+  rule(:p1) { (p2.as(:left) >> (mult_op >> p2.as(:right)).repeat(1).as(:rights)) | p2 }
   rule(:p0) { (p1.as(:left) >> (add_op >> p1.as(:right)).repeat(1).as(:rights)) | p1 }
   
   root(:p0)
