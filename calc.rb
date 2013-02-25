@@ -1,9 +1,8 @@
-require './parser'
 require './interpreter'
 
 
 parser = CalcParser.new
-interp = CalcInterpreter.new
+transf = CalcTransform.new
 
 input = [
   '1336 + 1',
@@ -27,7 +26,7 @@ input.each do |i|
   puts i
   ast = parser.parse(i)
   puts "    #{ast}"
-  ast = interp.apply(ast)
+  ast = transf.apply(ast)
   puts "    #{ast}"
   result = ast.eval
   puts "    #{result}"

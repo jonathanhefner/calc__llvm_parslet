@@ -1,19 +1,21 @@
-require 'parslet'
+require './parser'
 
 
-class IntLiteral < Struct.new(:val)
+class IntLiteral
   def eval
     val.to_i
   end
 end
 
-class FloatLiteral < Struct.new(:val)
+
+class FloatLiteral
   def eval
     val.to_f
   end
 end
 
-class OpRight < Struct.new(:op, :right)
+
+class OpRight
   def eval(left_val)
     case op
       when '+'
@@ -28,28 +30,9 @@ class OpRight < Struct.new(:op, :right)
   end
 end
 
-class OpSequence < Struct.new(:left, :rights)
+
+class OpSequence
   def eval
     rights.reduce(left.eval){|l, r| r.eval(l) }
   end
-end
-
-
-
-class CalcInterpreter < Parslet::Transform
-  rule(int: simple(:val)) {
-    IntLiteral.new(val)
-  }
-  
-  rule(float: simple(:val)) {
-    FloatLiteral.new(val)
-  }
-  
-  rule(op: simple(:op), right: subtree(:right)) {
-    OpRight.new(op, right)
-  }
-  
-  rule(left: subtree(:left), rights: sequence(:rights)) {
-    OpSequence.new(left, rights)
-  }
 end

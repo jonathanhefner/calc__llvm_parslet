@@ -25,3 +25,28 @@ class CalcParser < Parslet::Parser
   
   root(:p0)
 end
+
+
+class IntLiteral < Struct.new(:val); end
+class FloatLiteral < Struct.new(:val); end
+class OpRight < Struct.new(:op, :right); end
+class OpSequence < Struct.new(:left, :rights); end
+
+
+class CalcTransform < Parslet::Transform
+  rule(int: simple(:val)) {
+    IntLiteral.new(val)
+  }
+  
+  rule(float: simple(:val)) {
+    FloatLiteral.new(val)
+  }
+  
+  rule(op: simple(:op), right: subtree(:right)) {
+    OpRight.new(op, right)
+  }
+  
+  rule(left: subtree(:left), rights: sequence(:rights)) {
+    OpSequence.new(left, rights)
+  }
+end
