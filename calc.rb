@@ -1,4 +1,5 @@
 require './interpreter'
+require './compiler'
 
 
 parser = CalcParser.new
@@ -29,6 +30,8 @@ input.each do |i|
   ast = transf.apply(ast)
   puts "    #{ast}"
   result = ast.eval
+  puts "    #{result}"
+  result = compile_run(ast)
   puts "    #{result}"
   puts ''
 end
