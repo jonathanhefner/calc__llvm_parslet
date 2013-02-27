@@ -15,24 +15,17 @@ class FloatLiteral
 end
 
 
-class OpRight
-  def eval(left_val)
-    case op
-      when '+'
-        left_val + right.eval
-      when '-'
-        left_val - right.eval
-      when '*'
-        left_val * right.eval
-      when '/'
-        left_val / right.eval
-    end
-  end
-end
-
-
 class OpSequence
   def eval
-    rights.reduce(left.eval){|l, r| r.eval(l) }
+    rights.reduce(left.eval) do |left_eval, op_right|
+      right_eval = op_right.right.eval
+      
+      case op_right.op
+        when '+'; left_eval + right_eval
+        when '-'; left_eval - right_eval
+        when '*'; left_eval * right_eval
+        when '/'; left_eval / right_eval
+      end
+    end
   end
 end
