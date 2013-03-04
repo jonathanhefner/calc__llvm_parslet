@@ -2,21 +2,22 @@ require 'parslet'
 
 
 class CalcParser < Parslet::Parser
-  rule(:space) { match('\s').repeat(1) }
-  rule(:space?) { space.maybe }
+  rule(:sp) { match('\s').repeat(1) }
+  rule(:sp?) { sp.maybe }
   rule(:sign) { match('[+-]') }
   rule(:sign?) { sign.maybe }
   rule(:digit) { match('[0-9]') }
   rule(:digits) { digit.repeat(1) }
   rule(:digits?) { digit.repeat(0) }
+  rule(:decimal) { match('[.]') }
 
-  rule(:int) { (sign? >> digits).as(:int) >> space? }
-  rule(:float) { (sign? >> digits? >> match('[.]') >> digits).as(:float) >> space?}
+  rule(:int) { sp? >> (sign? >> digits).as(:int) >> sp? }
+  rule(:float) { sp? >> (sign? >> digits? >> decimal >> digits).as(:float) >> sp?}
   rule(:num) { float | int }
-  rule(:lparen) { match('[(]') >> space? }
-  rule(:rparen) { match('[)]') >> space? }
-  rule(:mult_op) { match('[*/]').as(:op) >> space? }
-  rule(:add_op) { match('[+-]').as(:op) >> space? }
+  rule(:lparen) { sp? >> match('[(]') >> sp? }
+  rule(:rparen) { sp? >> match('[)]') >> sp? }
+  rule(:mult_op) { sp? >> match('[*/]').as(:op) >> sp? }
+  rule(:add_op) { sp? >> match('[+-]').as(:op) >> sp? }
   
   # parslet implements PEG, therefore no left-recursion
   rule(:p2) { (lparen >> p0 >> rparen) | num }
