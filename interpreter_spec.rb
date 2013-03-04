@@ -2,7 +2,7 @@ require './interpreter'
 require 'rspec'
 
   
-describe 'interpret' do
+describe 'Calc.interpret' do
   { '1+1' => 2,
     '+1++1' => 2,
     '+1 + +1' => 2,
@@ -34,6 +34,6 @@ describe 'interpret' do
     '((2+3)*2)' => 10,
     '(1+2)*(3+4)' => 21
   }.each do |src, result|
-    it(src) { interpret(src).should == result }
+    it(src) { Calc.interpret(src).should == result }
   end
 end

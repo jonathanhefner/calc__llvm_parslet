@@ -3,7 +3,7 @@ require 'rspec'
 require 'parslet/rig/rspec'
 
 
-describe CalcParser do
+describe Calc::Parser do
   subject(:parser) { described_class.new }
   
   describe '#int' do
