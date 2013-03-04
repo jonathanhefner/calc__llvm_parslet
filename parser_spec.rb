@@ -1,4 +1,4 @@
-require './interpreter'
+require './parser.rb'
 require 'rspec'
 require 'parslet/rig/rspec'
 
@@ -50,6 +50,10 @@ describe CalcParser do
     
     it { should_not parse('()') }
     it { should_not parse('(1+())') }
+    it { should_not parse('(1+1') }
+    it { should_not parse('1+1)') }
+    it { should_not parse('(1+1))') }
+    it { should_not parse('((1+1') }
   end
   
   
