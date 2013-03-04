@@ -51,13 +51,15 @@ class OpSequence
 end
 
 
-def compile_run(ast)
+def compile_run(src)
+  src = parse(src) if src.is_a?(String)
+
   mod = LLVM::Module.new('Calc')
-  as_float = ast.float?
+  as_float = src.float?
 
   mod.functions.add('calc', [], as_float ? LLVM::Float : LLVM::Int) do |f|
     f.basic_blocks.append('entry').build do |b|
-      b.ret(ast.emit(b))
+      b.ret(src.emit(b))
     end
   end
   

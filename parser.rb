@@ -73,3 +73,8 @@ class CalcTransform < Parslet::Transform
     OpSequence.new(left, rights)
   }
 end
+
+
+def parse(src)
+  CalcTransform.new.apply(CalcParser.new.parse(src))
+end

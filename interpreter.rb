@@ -29,3 +29,9 @@ class OpSequence
     end
   end
 end
+
+
+def interpret(src)
+  src = parse(src) if src.is_a?(String)
+  src.eval
+end

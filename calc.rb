@@ -25,13 +25,9 @@ input = [
   
 input.each do |i|
   puts i
-  ast = parser.parse(i)
+  ast = parse(i)
   puts "    #{ast}"
-  ast = transf.apply(ast)
-  puts "    #{ast}"
-  result = ast.eval
-  puts "    #{result}"
-  result = compile_run(ast)
-  puts "    #{result}"
+  puts "    #{interpret(ast)}"
+  puts "    #{compile_run(ast)}"
   puts ''
 end
