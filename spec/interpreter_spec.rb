@@ -34,7 +34,9 @@ describe 'Calc.interpret' do
     '(2+3)*2' => 10,
     '((2+3)*2)' => 10,
     '(1+2)*(3+4)' => 21
-  }.each do |src, result|
-    it(src) { Calc.interpret(src).should == result }
+  }.each do |src, expected|
+    it("#{src} == #{expected}") { 
+      Calc.interpret(src).should == expected
+    }
   end
 end
