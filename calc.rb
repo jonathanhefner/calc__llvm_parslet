@@ -1,5 +1,6 @@
-require './interpreter'
-require './compiler'
+$:<< File.join(File.dirname(__FILE__), '.')
+require 'interpreter'
+require 'compiler'
 
 
 input = [

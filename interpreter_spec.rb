@@ -1,4 +1,5 @@
-require './interpreter'
+$:<< File.join(File.dirname(__FILE__), '.')
+require 'interpreter'
 require 'rspec'
 
   
