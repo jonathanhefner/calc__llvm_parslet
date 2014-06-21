@@ -2,39 +2,11 @@ $:<< File.join(File.dirname(__FILE__), '..', 'lib')
 require 'interpreter'
 require 'rspec'
 
+require 'test_cases'
+
   
 describe 'Calc.interpret' do
-  { '1+1' => 2,
-    '+1++1' => 2,
-    '+1 + +1' => 2,
-    '-1+1' => 0,
-    '1-1' => 0,
-    '1-+1' => 0,
-    '2-3' => -1,
-    '1*2' => 2,
-    '+1*+2' => 2,
-    '-1*-2' => 2,
-    '1/2' => 0,
-    '2/1' => 2,
-    '+2/+1' => 2,
-    '-2/-1' => 2,
-
-    '0.5+0.5' => 1,
-    '0.5-0.5' => 0,
-    '2*0.5' => 1,
-    '0.5/0.5' => 1,
-    
-    '2*3+2' => 8,
-    '2+3*2' => 8,
-    '5-2*2' => 1,
-    '8/4/2' => 1,
-    '1+4/2' => 3,
-    '5-2/2' => 4,
-
-    '(2+3)*2' => 10,
-    '((2+3)*2)' => 10,
-    '(1+2)*(3+4)' => 21
-  }.each do |src, expected|
+  TEST_CASES.each do |src, expected|
     it("#{src} == #{expected}") { 
       Calc.interpret(src).should == expected
     }
