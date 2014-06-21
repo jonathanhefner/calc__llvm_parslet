@@ -31,8 +31,8 @@ module Calc
         right_emit = op_right.right.emit(builder)
       
         if left_float || right_float
-          left_emit = builder.si2fp(left_emit) unless left_float
-          right_emit = builder.si2fp(right_emit) unless right_float
+          left_emit = builder.si2fp(left_emit, LLVM::Float) unless left_float
+          right_emit = builder.si2fp(right_emit, LLVM::Float) unless right_float
           left_float = true # for next iteration
         
           case op_right.op
