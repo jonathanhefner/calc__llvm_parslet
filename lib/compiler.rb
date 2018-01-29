@@ -3,7 +3,7 @@ require 'llvm/execution_engine'
 require 'llvm/transforms/scalar'
 require 'parser'
 
-LLVM.init_x86
+LLVM.init_jit
 
 
 module Calc
@@ -20,21 +20,21 @@ module Calc
       LLVM::Float(val.to_f)
     end
   end
-  
+
 
   class OpSequence
     def emit(builder)
       left_float = left.float?
-      
+
       rights.reduce(left.emit(builder)) do |left_emit, op_right|
         right_float = op_right.float?
         right_emit = op_right.right.emit(builder)
-      
+
         if left_float || right_float
           left_emit = builder.si2fp(left_emit, LLVM::Float) unless left_float
           right_emit = builder.si2fp(right_emit, LLVM::Float) unless right_float
           left_float = true # for next iteration
-        
+
           case op_right.op
             when '+'; builder.fadd(left_emit, right_emit)
             when '-'; builder.fsub(left_emit, right_emit)
@@ -65,7 +65,7 @@ module Calc
         b.ret(src.emit(b))
       end
     end
-    
+
     mod.verify
     #mod.dump
 
