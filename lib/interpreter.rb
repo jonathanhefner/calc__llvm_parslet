@@ -1,4 +1,4 @@
-require "parser"
+require_relative "parser"
 
 
 module Calc
