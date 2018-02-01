@@ -1,7 +1,7 @@
-require 'llvm/core'
-require 'llvm/execution_engine'
-require 'llvm/transforms/scalar'
-require 'parser'
+require "llvm/core"
+require "llvm/execution_engine"
+require "llvm/transforms/scalar"
+require "parser"
 
 LLVM.init_jit
 
@@ -36,17 +36,17 @@ module Calc
           left_float = true # for next iteration
 
           case op_right.op
-            when '+'; builder.fadd(left_emit, right_emit)
-            when '-'; builder.fsub(left_emit, right_emit)
-            when '*'; builder.fmul(left_emit, right_emit)
-            when '/'; builder.fdiv(left_emit, right_emit)
+            when "+"; builder.fadd(left_emit, right_emit)
+            when "-"; builder.fsub(left_emit, right_emit)
+            when "*"; builder.fmul(left_emit, right_emit)
+            when "/"; builder.fdiv(left_emit, right_emit)
           end
         else
           case op_right.op
-            when '+'; builder.add(left_emit, right_emit)
-            when '-'; builder.sub(left_emit, right_emit)
-            when '*'; builder.mul(left_emit, right_emit)
-            when '/'; builder.sdiv(left_emit, right_emit)
+            when "+"; builder.add(left_emit, right_emit)
+            when "-"; builder.sub(left_emit, right_emit)
+            when "*"; builder.mul(left_emit, right_emit)
+            when "/"; builder.sdiv(left_emit, right_emit)
           end
         end
       end
@@ -57,11 +57,11 @@ module Calc
   def self.compile_run(src)
     src = parse(src) if src.is_a?(String)
 
-    mod = LLVM::Module.new('Calc')
+    mod = LLVM::Module.new("Calc")
     as_float = src.float?
 
-    mod.functions.add('calc', [], as_float ? LLVM::Float : LLVM::Int) do |f|
-      f.basic_blocks.append('entry').build do |b|
+    mod.functions.add("calc", [], as_float ? LLVM::Float : LLVM::Int) do |f|
+      f.basic_blocks.append("entry").build do |b|
         b.ret(src.emit(b))
       end
     end
@@ -70,7 +70,7 @@ module Calc
     #mod.dump
 
     jit = LLVM::JITCompiler.new(mod)
-    result = jit.run_function(mod.functions['calc'])
+    result = jit.run_function(mod.functions["calc"])
     as_float ? result.to_f : result.to_i
   end
 

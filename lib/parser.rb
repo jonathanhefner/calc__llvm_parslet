@@ -1,4 +1,4 @@
-require 'parslet'
+require "parslet"
 
 
 module Calc
@@ -20,12 +20,12 @@ module Calc
     rule(:rparen) { sp? >> match('[)]') >> sp? }
     rule(:mult_op) { sp? >> match('[*/]').as(:op) >> sp? }
     rule(:add_op) { sp? >> match('[+-]').as(:op) >> sp? }
-    
+
     # parslet implements PEG, therefore no left-recursion
     rule(:p2) { (lparen >> p0 >> rparen) | num }
     rule(:p1) { (p2.as(:left) >> (mult_op >> p2.as(:right)).repeat(1).as(:rights)) | p2 }
     rule(:p0) { (p1.as(:left) >> (add_op >> p1.as(:right)).repeat(1).as(:rights)) | p1 }
-    
+
     root(:p0)
   end
 
@@ -62,15 +62,15 @@ module Calc
     rule(int: simple(:val)) {
       IntLiteral.new(val)
     }
-    
+
     rule(float: simple(:val)) {
       FloatLiteral.new(val)
     }
-    
+
     rule(op: simple(:op), right: subtree(:right)) {
       OpRight.new(op, right)
     }
-    
+
     rule(left: subtree(:left), rights: sequence(:rights)) {
       OpSequence.new(left, rights)
     }
@@ -80,5 +80,5 @@ module Calc
   def self.parse(src)
     Transform.new.apply(Parser.new.parse(src))
   end
-  
+
 end

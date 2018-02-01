@@ -1,4 +1,4 @@
-require 'parser'
+require "parser"
 
 
 module Calc
@@ -21,12 +21,12 @@ module Calc
     def eval
       rights.reduce(left.eval) do |left_eval, op_right|
         right_eval = op_right.right.eval
-        
+
         case op_right.op
-          when '+'; left_eval + right_eval
-          when '-'; left_eval - right_eval
-          when '*'; left_eval * right_eval
-          when '/'; left_eval / right_eval
+          when "+"; left_eval + right_eval
+          when "-"; left_eval - right_eval
+          when "*"; left_eval * right_eval
+          when "/"; left_eval / right_eval
         end
       end
     end
