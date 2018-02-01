@@ -33,10 +33,38 @@ $ cd /path/to/calc
 $ LLVM_CONFIG=/usr/lib/llvm-3.5/bin/llvm-config bundle install
 ```
 
-## Usage
-
-Run the tests:
+Finally, run the tests:
 
 ```bash
 $ LD_LIBRARY_PATH=/usr/lib/llvm-3.5/lib bundle exec rake test
 ```
+
+
+## Usage
+
+Start the REPL in interpreter mode:
+
+```bash
+$ LD_LIBRARY_PATH=/usr/lib/llvm-3.5/lib bundle exec rake repl
+```
+
+Or in JIT mode:
+
+```bash
+$ LD_LIBRARY_PATH=/usr/lib/llvm-3.5/lib bundle exec rake repl[jit]
+```
+
+Then try a few examples:
+
+```
+> 1 + 1
+2
+
+> 22.0 / 7
+3.142857142857143
+
+> 2 * (5 - 2) * (5 + 2)
+42
+```
+
+Exit the REPL with <kbd>CTRL+D</kbd>.
